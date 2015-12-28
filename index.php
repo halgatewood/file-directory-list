@@ -1,12 +1,36 @@
 <?php
-// Free PHP File Directory Listing Script - Version 1.5
-// HalGatewood.com
+/* 
 
-// THINGS TO CHANGE: 
+Free PHP File Directory Listing Script - Version 1.6
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Hal Gatewood
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+*** OPTIONS ***/
 
 	// TITLE OF PAGE
 	$title = "List of Files";
-
+	
 	// ADD SPECIFIC FILES YOU WANT TO IGNORE HERE
 	$ignore_file_list = array( ".htaccess", "Thumbs.db", ".DS_Store", "index.php" );
 	
@@ -21,7 +45,7 @@
 	
 	// TOGGLE SUB FOLDERS, SET TO false IF YOU WANT OFF
 	$toggle_sub_folders = true;
-	
+
 	
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
@@ -205,7 +229,6 @@ build_blocks( $items, false );
 		 	$('.sub[data-folder="' + $(this).attr('href') + '"]').slideToggle();
 			e.preventDefault();
 		});
-	
 	});
 </script>
 <?php } ?>
