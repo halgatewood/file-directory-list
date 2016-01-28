@@ -67,7 +67,7 @@ if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 		.note { padding:  0 5px 25px 0; font-size:80%; color: #666; line-height: 18px; }
 		.block { clear: both;  min-height: 50px; border-top: solid 1px #ECE9E9; }
 		.block:first-child { border: none; }
-		.block .img { width: 50px; height: 50px; display: block; float: left; margin-right: 10px; background: transparent url(https://dl.dropbox.com/u/6771946/icons/icons.png) no-repeat 0 0; }
+		.block .img { width: 50px; height: 50px; display: block; float: left; margin-right: 10px; background: transparent url(<?php echo $icon_url; ?>) no-repeat 0 0; }
 		.block .date { margin-top: 4px; font-size: 70%; color: #666; }
 		.block a { display: block; padding: 10px 15px; transition: all 0.35s; }
 		.block a:hover { text-decoration: none; background: #efefef; }
