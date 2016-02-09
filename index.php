@@ -1,7 +1,7 @@
 <?php
 /* 
 
-Free PHP File Directory Listing Script - Version 1.6
+Free PHP File Directory Listing Script - Version 1.7
 
 The MIT License (MIT)
 
@@ -160,7 +160,7 @@ function build_blocks( $items, $folder )
 		// IGNORE FILE
 		if(in_array($item, $ignore_file_list)) { continue; }
 	
-		if( $folder )
+		if( $folder && $item )
 		{
 			$item = "$folder/$item";
 		}
@@ -181,7 +181,10 @@ function build_blocks( $items, $folder )
 		$file_time = date("U", filemtime($item));
 		
 		// FILES
-		$objects['files'][$file_time . "-" . $item] = $item;
+		if( $item )
+		{
+			$objects['files'][$file_time . "-" . $item] = $item;
+		}
 	}
 	
 	foreach($objects['directories'] as $c => $file)
