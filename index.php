@@ -59,8 +59,8 @@ if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 	<link href="https://fonts.googleapis.com/css?family=Lato:700,400,300,300italic,700italic" rel="stylesheet" type="text/css" />
 	<style>
 		*, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
-		body { font-family: "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-weight: 400; font-size: 14px; line-height: 18px; padding: 0; margin: 0; background: #f5f5f5; }
-		.wrap { max-width: 600px; margin: 20px auto; background: white; padding: 40px; box-shadow: 0 0 2px #ccc; }
+		body { font-family: "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-weight: 400; font-size: 14px; line-height: 18px; padding: 0; margin: 0; background: #f5f5f5; text-align: center;}
+		.wrap { max-width: 600px; margin: 20px auto; background: white; padding: 40px; box-shadow: 0 0 2px #ccc; text-align: left;}
 		@media only screen and (max-width: 700px) { .wrap { padding: 15px; } }
 		h1 { text-align: center; margin: 40px 0; font-size: 22px; font-weight: bold; color: #666; }
 		a { color: #399ae5; text-decoration: none; } a:hover { color: #206ba4; text-decoration: none; }
@@ -236,5 +236,6 @@ build_blocks( $items, false );
 </script>
 <?php } ?>
 </div>
+<a href="https://halgatewood.com/free/file-directory-list/">Free PHP File Directory Script</a> (<a href="https://github.com/halgatewood/file-directory-list/">GitHub</a>)
 </body>
 </html>
