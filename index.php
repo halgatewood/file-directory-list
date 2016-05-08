@@ -42,6 +42,7 @@ SOFTWARE.
 	
 	// ICON URL
 	$icon_url = "https://dl.dropbox.com/u/6771946/icons/icons.png";
+	$icon_url = "https://dl.dropbox.com/u/6771946/icons/flat.png";
 	
 	// TOGGLE SUB FOLDERS, SET TO false IF YOU WANT OFF
 	$toggle_sub_folders = true;
