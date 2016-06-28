@@ -1,7 +1,7 @@
 <?php
 /* 
 
-Free PHP File Directory Listing Script - Version 1.7
+Free PHP File Directory Listing Script - Version 1.8
 
 The MIT License (MIT)
 
@@ -51,9 +51,8 @@ SOFTWARE.
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
 	<title><?php echo $title; ?></title>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
@@ -237,6 +236,6 @@ build_blocks( $items, false );
 </script>
 <?php } ?>
 </div>
-<a href="https://halgatewood.com/free/file-directory-list/">Free PHP File Directory Script</a> (<a href="https://github.com/halgatewood/file-directory-list/">GitHub</a>)
+<div style="padding: 10px;"><a href="https://halgatewood.com/free/file-directory-list/">Free PHP File Directory Script</a> (<a href="https://github.com/halgatewood/file-directory-list/">GitHub</a>)</div>
 </body>
 </html>
