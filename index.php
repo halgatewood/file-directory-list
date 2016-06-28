@@ -41,7 +41,7 @@ SOFTWARE.
 	$sort_by = "name_asc"; // options: name_asc, name_desc, date_asc, date_desc
 	
 	// ICON URL
-	$icon_url = "https://dl.dropbox.com/u/6771946/icons/icons.png";
+	//$icon_url = "https://dl.dropbox.com/u/6771946/icons/icons.png"; // OLD SCHOOL
 	$icon_url = "https://dl.dropbox.com/u/6771946/icons/flat.png";
 	
 	// TOGGLE SUB FOLDERS, SET TO false IF YOU WANT OFF
