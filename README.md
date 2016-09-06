@@ -27,9 +27,9 @@ You can create an array of extensions not to show, for example: 'jpg,png,gif,pdf
 This will sort the files, the available options are: name_asc, name_desc, date_asc, date_desc
 
 --
-`$icon_url = "https://dl.dropbox.com/u/6771946/icons/flat.png";`
+`$icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEw....";`
 
-The URL of the icons used on the left. This is sprite of even spaced out icons. You can create your own like the one above and just change this link.
+A data sprite of evenly spaced out icons. You can create your own like the one found here: https://dl.dropbox.com/u/6771946/icons/flat.png
 
 --
 `$toggle_sub_folders = true;`
