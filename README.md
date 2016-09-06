@@ -35,3 +35,13 @@ The URL of the icons used on the left. This is sprite of even spaced out icons. 
 `$toggle_sub_folders = true;`
 
 If a folder is clicked on, it will slide down the sub folder. You can turn this off here.
+
+--
+`$force_download = true;`
+
+This will add the html download attribute which forces the download in some browsers.
+
+--
+`$ignore_empty_folders = true;`
+
+Ability to hide empty folders.
