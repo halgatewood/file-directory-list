@@ -135,13 +135,7 @@ function display_block( $file )
 {
 	global $ignore_file_list, $ignore_ext_list, $force_download;
 	
-	//$file_ext = getFileExt($file);
-	//if( !$file_ext AND is_dir($file)) $file_ext = "dir";
-	if( is_dir($file))
-		$file_ext = "dir";
-	else
-		$file_ext = getFileExt($file);
-
+	$file_ext = is_dir($file) ? "dir" : getFileExt($file);
 	if(in_array($file, $ignore_file_list)) return;
 	if(in_array($file_ext, $ignore_ext_list)) return;
 	
