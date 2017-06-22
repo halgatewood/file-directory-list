@@ -29,7 +29,7 @@ This will sort the files, the available options are: name_asc, name_desc, date_a
 --
 `$icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEw....";`
 
-A data sprite of evenly spaced out icons. You can create your own like the one found here: https://dl.dropbox.com/u/6771946/icons/flat.png
+A data sprite of evenly spaced out icons. You can create your own like the one found here: https://www.dropbox.com/s/lzxi5abx2gaj84q/flat.png?dl=0
 
 --
 `$toggle_sub_folders = true;`
