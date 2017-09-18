@@ -61,6 +61,7 @@ if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><?php echo $title; ?></title>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 	<link href="//fonts.googleapis.com/css?family=Lato:400" rel="stylesheet" type="text/css" />
