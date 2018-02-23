@@ -82,7 +82,7 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 		.block .file { padding-bottom: 5px; }
 		.block .data { line-height: 1.3em; color: #666; }
 		.block a { display: block; padding: 20px; transition: all 0.35s; }
-		.block a:hover { text-decoration: none; background: #efefef; }
+		.block a:hover, .block a:focus { text-decoration: none; background: #efefef; }
 		
 		.bold { font-weight: 900; }
 		.upper { text-transform: uppercase; }
@@ -108,7 +108,7 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 		.html, .xhtml, .dhtml, .php, .asp, .css, .js, .inc { background-position: -900px 0 !important; }
 		.dir { background-position: -950px 0 !important; }
 		
-		.sub { margin-left: 20px; border-left: solid 1px #ECE9E9; display: none; }
+		.sub { margin-left: 20px; border-left: solid 5px #ECE9E9; display: none; }
 		
 		body.dark { background: #1d1c1c; color: #fff; }
 		body.dark h1 { color: #fff; }
@@ -117,6 +117,7 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 		body.dark .block a:hover { background: #000; }
 		body.dark .note { color: #fff; }
 		body.dark .block .data { color: #fff; }
+		body.dark .sub { border-left: solid 5px #666; }
 	</style>
 </head>
 <body class="<?php echo $color; ?>">
