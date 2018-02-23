@@ -110,11 +110,13 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 		
 		.sub { margin-left: 20px; border-left: solid 1px #ECE9E9; display: none; }
 		
-		body.dark { background: #1d1c1c; }
+		body.dark { background: #1d1c1c; color: #fff; }
 		body.dark h1 { color: #fff; }
 		body.dark .wrap { background: #2b2a2a; }
 		body.dark .block { border-top: solid 1px #666; }
 		body.dark .block a:hover { background: #000; }
+		body.dark .note { color: #fff; }
+		body.dark .block .data { color: #fff; }
 	</style>
 </head>
 <body class="<?php echo $color; ?>">
