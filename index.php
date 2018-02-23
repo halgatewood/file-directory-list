@@ -1,7 +1,7 @@
 <?php
 /* 
 
-Free PHP File Directory Listing Script - Version 1.10
+Free PHP File Directory Listing Script - Version 1.11
 
 The MIT License (MIT)
 
@@ -58,7 +58,7 @@ SOFTWARE.
 
 	
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
-if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
+if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 ?>
 <!DOCTYPE html>
 <html>
@@ -67,21 +67,26 @@ if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0, viewport-fit=cover">
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
-	<link href="//fonts.googleapis.com/css?family=Lato:400" rel="stylesheet" type="text/css" />
+	<link href="//fonts.googleapis.com/css?family=Lato:400;900" rel="stylesheet" type="text/css" />
 	<style>
 		*, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 		body { font-family: "Lato", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; font-weight: 400; font-size: 14px; line-height: 18px; padding: 0; margin: 0; background: #f5f5f5; text-align: center;}
-		.wrap { max-width: 100%; width: 600px; margin: 20px auto; background: white; padding: 40px; box-shadow: 0 0 2px #ccc; text-align: left;}
+		.wrap { max-width: 100%; width: 500px; margin: 20px auto; background: white; padding: 40px; border-radius: 3px; border: solid 1px #ebebeb; text-align: left;}
 		@media only screen and (max-width: 700px) { .wrap { padding: 15px; } }
 		h1 { text-align: center; margin: 40px 0; font-size: 22px; font-weight: bold; color: #666; }
 		a { color: #399ae5; text-decoration: none; } a:hover { color: #206ba4; text-decoration: none; }
 		.note { padding:  0 5px 25px 0; font-size:80%; color: #666; line-height: 18px; }
-		.block { clear: both;  min-height: 50px; border-top: solid 1px #ECE9E9; }
+		.block { clear: both; min-height: 50px; border-top: solid 1px #ECE9E9; }
 		.block:first-child { border: none; }
 		.block .img { width: 50px; height: 50px; display: block; float: left; margin-right: 10px; background: transparent url(<?php echo $icon_url; ?>) no-repeat 0 0; }
-		.block .date { margin-top: 4px; font-size: 70%; color: #666; }
-		.block a { display: block; padding: 10px 15px; transition: all 0.35s; }
+		.block .file { padding-bottom: 5px; }
+		.block .data { line-height: 1.3em; color: #666; }
+		.block a { display: block; padding: 20px; transition: all 0.35s; }
 		.block a:hover { text-decoration: none; background: #efefef; }
+		
+		.bold { font-weight: 900; }
+		.upper { text-transform: uppercase; }
+		.fs-1 { font-size: 1em; } .fs-1-1 { font-size: 1.1em; } .fs-1-2 { font-size: 1.2em; } .fs-1-3 { font-size: 1.3em; } .fs-0-9 { font-size: 0.9em; } .fs-0-8 { font-size: 0.8em; } .fs-0-7 { font-size: 0.7em; }
 		
 		.jpg, .jpeg, .gif, .png { background-position: -50px 0 !important; } 
 		.pdf { background-position: -100px 0 !important; }  
@@ -118,24 +123,45 @@ if( !$title ) { $title = cleanTitle(basename(dirname(__FILE__))); }
 <?php
 
 // FUNCTIONS TO MAKE THE MAGIC HAPPEN, BEST TO LEAVE THESE ALONE
-function cleanTitle($title)
+function clean_title($title)
 {
 	return ucwords( str_replace( array("-", "_"), " ", $title) );
 }
 
-function getFileExt($filename) 
+function ext($filename) 
 {
 	return substr( strrchr( $filename,'.' ),1 );
 }
 
-function format_size($file) 
+function display_size($bytes, $precision = 2) 
 {
-	$bytes = filesize($file);
-	if ($bytes < 1024) return $bytes.'b';
-	elseif ($bytes < 1048576) return round($bytes / 1024, 2).'kb';
-	elseif ($bytes < 1073741824) return round($bytes / 1048576, 2).'mb';
-	elseif ($bytes < 1099511627776) return round($bytes / 1073741824, 2).'gb';
-	else return round($bytes / 1099511627776, 2).'tb';
+	$units = array('B', 'KB', 'MB', 'GB', 'TB');
+    $bytes = max($bytes, 0); 
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+    $pow = min($pow, count($units) - 1); 
+    $bytes /= (1 << (10 * $pow)); 
+	return round($bytes, $precision) . '<span class="fs-0-8 bold">' . $units[$pow] . "</span>";
+}
+
+function count_dir_files( $dir)
+{
+	$fi = new FilesystemIterator(__DIR__ . "/" . $dir, FilesystemIterator::SKIP_DOTS);
+	return iterator_count($fi);
+}
+
+function get_directory_size($path)
+{
+    $bytestotal = 0;
+    $path = realpath($path);
+    if($path!==false && $path!='' && file_exists($path))
+    {
+        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object)
+        {
+            $bytestotal += $object->getSize();
+        }
+    }
+    
+    return display_size($bytestotal);
 }
 
 
@@ -144,7 +170,7 @@ function display_block( $file )
 {
 	global $ignore_file_list, $ignore_ext_list, $force_download;
 	
-	$file_ext = getFileExt($file);
+	$file_ext = ext($file);
 	if( !$file_ext AND is_dir($file)) $file_ext = "dir";
 	if(in_array($file, $ignore_file_list)) return;
 	if(in_array($file_ext, $ignore_ext_list)) return;
@@ -153,12 +179,25 @@ function display_block( $file )
 	
 	$rtn = "<div class=\"block\">";
 	$rtn .= "<a href=\"$file\" class=\"$file_ext\"{$download_att}>";
-	$rtn .= "	<div class=\"img $file_ext\">&nbsp;</div>";
-	$rtn .= "	<div class=\"name\">\n";
-	$rtn .= "		<div class=\"file\">" . basename($file) . "</div>\n";
-	$rtn .= "		<div class=\"date\">Size: " . format_size($file) . "<br />Last modified: " .  date("D. F jS, Y - h:ia", filemtime($file)) . "</div>\n";
-	$rtn .= "	</div>\n";
-	$rtn .= "	</a>\n";
+	$rtn .= "	<div class=\"img $file_ext\"></div>";
+	$rtn .= "	<div class=\"name\">";
+	
+	if ($file_ext === "dir") 
+	{
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . basename($file) . "</div>";
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">" . count_dir_files($file) . "</span> files</div>";
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . get_directory_size($file) . "</div>";
+		
+	}
+	else
+	{
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . basename($file) . "</div>";
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . display_size(filesize($file)) . "</div>";
+		$rtn .= "		<div class=\"data upper modified fs-0-7\"><span class=\"bold\">Last modified:</span> " .  date("D. F jS, Y - h:ia", filemtime($file)) . "</div>";	
+	}
+
+	$rtn .= "	</div>";
+	$rtn .= "	</a>";
 	$rtn .= "</div>";
 	return $rtn;
 }
@@ -185,7 +224,7 @@ function build_blocks( $items, $folder )
 			$item = "$folder/$item";
 		}
 
-		$file_ext = getFileExt($item);
+		$file_ext = ext($item);
 		
 		// IGNORE EXT
 		if(in_array($file_ext, $ignore_ext_list)) { continue; }
@@ -216,7 +255,7 @@ function build_blocks( $items, $folder )
 			$has_sub_items = false;
 			foreach( $sub_items as $sub_item )
 			{
-				$sub_fileExt = getFileExt( $sub_item );
+				$sub_fileExt = ext( $sub_item );
 				if( $sub_item == ".." OR $sub_item == ".") continue;
 				if(in_array($sub_item, $ignore_file_list)) continue;
 				if(in_array($sub_fileExt, $ignore_ext_list)) continue;
@@ -251,7 +290,7 @@ function build_blocks( $items, $folder )
 	
 	foreach($objects['files'] as $t => $file)
 	{
-		$fileExt = getFileExt($file);
+		$fileExt = ext($file);
 		if(in_array($file, $ignore_file_list)) { continue; }
 		if(in_array($fileExt, $ignore_ext_list)) { continue; }
 		echo display_block( $file );
