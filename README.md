@@ -12,6 +12,10 @@ At the top of the `index.php` file you have a few settings you can change:
 This will be the title of your page and also is set to the meta mitle of the document.
 
 --
+`$color	= "light";`
+Change this variable to `dark` when you are feeling down.
+
+--
 `$ignore_file_list = array( ".htaccess", "Thumbs.db", ".DS_Store", "index.php" );`
 
 Create an array of files that you do not want to appear in the listing
