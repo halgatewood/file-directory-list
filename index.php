@@ -82,7 +82,7 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 		.block .file { padding-bottom: 5px; }
 		.block .data { line-height: 1.3em; color: #666; }
 		.block a { display: block; padding: 20px; transition: all 0.35s; }
-		.block a:hover, .block a:focus { text-decoration: none; background: #efefef; }
+		.block a:hover, .block a.open { text-decoration: none; background: #efefef; }
 		
 		.bold { font-weight: 900; }
 		.upper { text-transform: uppercase; }
@@ -114,10 +114,10 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 		body.dark h1 { color: #fff; }
 		body.dark .wrap { background: #2b2a2a; }
 		body.dark .block { border-top: solid 1px #666; }
-		body.dark .block a:hover { background: #000; }
+		body.dark .block a:hover, body.dark .block a.open { background: #000; }
 		body.dark .note { color: #fff; }
 		body.dark .block .data { color: #fff; }
-		body.dark .sub { border-left: solid 5px #666; }
+		body.dark .sub { border-left: solid 5px #0e0e0e; }
 	</style>
 </head>
 <body class="<?php echo $color; ?>">
@@ -306,11 +306,12 @@ build_blocks( $items, false );
 ?>
 
 <?php if($toggle_sub_folders) { ?>
-<script>
+<script type="text/javascript">
 	$(document).ready(function() 
 	{
 		$("a.dir").click(function(e)
 		{
+			$(this).toggleClass('open');
 		 	$('.sub[data-folder="' + $(this).attr('href') + '"]').slideToggle();
 			e.preventDefault();
 		});
