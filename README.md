@@ -13,6 +13,7 @@ This will be the title of your page and also is set to the meta mitle of the doc
 
 --
 `$color	= "light";`
+
 Change this variable to `dark` when you are feeling down.
 
 --
