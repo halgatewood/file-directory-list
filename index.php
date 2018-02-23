@@ -155,7 +155,12 @@ function display_block( $file )
 	$rtn .= "<a href=\"$file\" class=\"$file_ext\"{$download_att}>";
 	$rtn .= "	<div class=\"img $file_ext\">&nbsp;</div>";
 	$rtn .= "	<div class=\"name\">\n";
-	$rtn .= "		<div class=\"file\">" . basename($file) . "</div>\n";
+	if ($file_ext === "dir") {
+		$rtn .= "		<div class=\"file\"><strong>[ " . basename($file) . " ]</strong></div>\n";
+	} else {
+		$rtn .= "		<div class=\"file\">" . basename($file) . "</div>\n";
+	}
+	//$rtn .= "		<div class=\"file\">" . basename($file) . "</div>\n";
 	$rtn .= "		<div class=\"date\">Size: " . format_size($file) . "<br />Last modified: " .  date("D. F jS, Y - h:ia", filemtime($file)) . "</div>\n";
 	$rtn .= "	</div>\n";
 	$rtn .= "	</a>\n";
