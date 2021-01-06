@@ -177,6 +177,7 @@ function display_block( $file )
 	if( !$file_ext AND is_dir($file)) $file_ext = "dir";
 	if(in_array($file, $ignore_file_list)) return;
 	if(in_array($file_ext, $ignore_ext_list)) return;
+	if(basename($file) == "flat.png") return;
 	
 	$download_att = ($force_download AND $file_ext != "dir" ) ? " download='" . basename($file) . "'" : "";
 	
