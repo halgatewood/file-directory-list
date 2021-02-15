@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  fdl:
+    container_name: file-directory-lister
+    hoatname: file-directory-lister
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www/html:rw
