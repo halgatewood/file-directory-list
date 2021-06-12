@@ -41,7 +41,7 @@ SOFTWARE.
 	$ignore_ext_list = array( );
 	
 	// SORT BY
-	$sort_by = "name_asc"; // options: name_asc, name_desc, date_asc, date_desc
+	$sort_by = "date_desc"; // options: name_asc, name_desc, date_asc, date_desc
 	
 	// ICON URL
 	//$icon_url = "https://www.dropbox.com/s/lzxi5abx2gaj84q/flat.png?dl=0"; // DIRECT LINK
@@ -214,6 +214,8 @@ function build_blocks( $items, $folder )
 	$objects = array();
 	$objects['directories'] = array();
 	$objects['files'] = array();
+
+	// First loop over all items in this folder
 	
 	foreach($items as $c => $item)
 	{
@@ -235,7 +237,8 @@ function build_blocks( $items, $folder )
 		// DIRECTORIES
 		if( is_dir($item) ) 
 		{
-			$objects['directories'][] = $item; 
+			$dir_time = filemtime($item . '/.');
+			$objects['directories'][$dir_time] = $item; 
 			continue;
 		}
 		
@@ -248,6 +251,13 @@ function build_blocks( $items, $folder )
 			$objects['files'][$file_time . "-" . $item] = $item;
 		}
 	}
+
+	// Second loop
+
+	if( $sort_by == "date_asc" ) { ksort($objects['directories']); }
+	elseif( $sort_by == "date_desc" ) { krsort($objects['directories']); }
+	elseif( $sort_by == "name_asc" ) { natsort($objects['directories']); }
+	elseif( $sort_by == "name_desc" ) { arsort($objects['directories']); }
 	
 	foreach($objects['directories'] as $c => $file)
 	{
@@ -285,7 +295,7 @@ function build_blocks( $items, $folder )
 		}
 	}
 	
-	// SORT BEFORE LOOP
+	// SORT BEFORE DISPLAYING ALL BLOCKS
 	if( $sort_by == "date_asc" ) { ksort($objects['files']); }
 	elseif( $sort_by == "date_desc" ) { krsort($objects['files']); }
 	elseif( $sort_by == "name_asc" ) { natsort($objects['files']); }
