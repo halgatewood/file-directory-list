@@ -67,7 +67,7 @@ $index_ext_list = array("html");
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 
-if ($AUTH_ENABLED) { $require_auth(); }
+if ($AUTH_ENABLED) { require_auth(); }
 
 ?>
 
