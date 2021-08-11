@@ -38,6 +38,7 @@ $title = "<h1>Zaubar Web Tour QA</h1><h3>Pick your version</h3><p>sort_by = " . 
 $AUTH_ENABLED = true;
 $AUTH_USER = 'admin';
 $AUTH_PASS = 'admin';
+$AUTH_INPUT = "";
 
 // STYLING (light or dark)
 $color	= "light";
@@ -69,7 +70,7 @@ $index_ext_list = array("html");
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 
-if ($AUTH_ENABLED) { require_auth(); }
+if ($AUTH_ENABLED) { $AUTH_INPUT = require_auth(); }
 
 ?>
 
@@ -458,6 +459,8 @@ function require_auth() {
 		header('HTTP/1.1 401 Authorization Required');
 		header('WWW-Authenticate: Basic realm="Access denied"');
 		exit;
+	} else {
+		return $_SERVER['PHP_AUTH_USER'] . ":" . $_SERVER['PHP_AUTH_PW']
 	}
 }
 
@@ -469,6 +472,16 @@ $items = scandir( dirname(__FILE__) );
 build_blocks( $items, false );
 
 ?>
+
+<?php if($AUTH_ENABLED) { ?>
+<script type="text/javascript">
+	$(document).ready(function() 
+	{
+
+		alert("" + <?php echo $AUTH_INPUT ?>);
+
+	});
+<?php } ?>
 
 <?php if($toggle_sub_folders) { ?>
 <script type="text/javascript">
