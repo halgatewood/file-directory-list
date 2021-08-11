@@ -63,7 +63,7 @@ $ignore_empty_folders = true;
 
 // DISPLAY LINKS TO HTML FILES IN A FLAT LIST
 $flat_link_list = array();
-$flat_link_list_exclude = array('WTA');
+function flat_link_list_filter($link) { return substr($link, 0, 3) != 'WTA'; }
 
     
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
@@ -322,15 +322,7 @@ function display_flat_link_list() {
     $h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
     $h .= "<input type=\"checkbox\" id=\"drawer-handle\">";
     $h .= "<div class=\"link-list-container\">";
-    foreach($flat_link_list as $link) {
-        $exclude = false;
-        foreach($flat_link_list_exclude as $exc) {
-            if (str_contains($link, $exc)) {
-                $exclude = true;
-                break;
-            }
-        }
-        if ($exclude) continue;
+    foreach(array_filter($flat_link_list, 'flat_link_list_filter') as $link) {
         $h .= "<div><a href=\"./" . $link . "\">" . $link . "</a>";
         $h .= "<i class=\"link-time\" title=\"" . date("D. F jS, Y - h:ia", filemtime($link)) . "\">" . unix2ago(filemtime($link)) . "</i>";
         $h .= "<form class=\"link-annotation-form\">";
