@@ -334,11 +334,12 @@ function display_flat_link_list() {
     foreach(array_filter($flat_link_list, 'flat_link_list_filter') as $link) {
         $is_broken = '';
         $comment = '';
-        foreach($acts as $act) {
+        foreach(array_reverse($acts) as $act) {
             $a = explode(' ', $act);
             if ($a[2] == $link) {
                 if ($a[3] == 'broken') $is_broken = 'checked';
                 if (!empty($a[4])) $comment = $a[4];
+                break;
             }
         }
         $h .= "<div><a href=\"./" . $link . "\">" . $link . "</a>";
