@@ -89,9 +89,11 @@ if ($track_activity) {
   $txt = $user . ' ';
   $txt .= date(DATE_ATOM, time()) . ' ';
   $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-  $link_annotations = array();
-  parse_str(parse_url($url, PHP_URL_QUERY), $link_annotations);
-  if ($link_annotations['broken'] == 'on') $link_annotations['broken'] = 'broken';
+  $link_annotations = array('none', 'off', 'nocomment');
+  if (parse_url($url, PHP_URL_QUERY)) {
+    parse_str(parse_url($url, PHP_URL_QUERY), $link_annotations);
+    if ($link_annotations['broken'] == 'on') $link_annotations['broken'] = 'broken';
+  }
   $txt .= implode(' ', $link_annotations);
   file_put_contents('activity.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
 }
@@ -305,9 +307,9 @@ function get_directory_size($path)
     return display_size($bytestotal);
 }
 
-function unix2ago($t) {
+function filemtimeago($file) {
     date_default_timezone_set('Europe/Berlin');
-    $sec = (time() - t) / 1000;
+    $sec = (filemtime('logins.txt') - filemtime($file)) / 1000;
     if ($sec > 60*60*12) return round($sec / (60*60*24), 1) . ' days ago';
     if ($sec > 60*60) return round($sec / (60*60)) . ' hours ago';
     if ($sec > 60) return round($sec / 60) . ' minutes ago';
@@ -318,16 +320,26 @@ function unix2ago($t) {
 function display_flat_link_list() {
     global $flat_link_list;
     date_default_timezone_set('Europe/Berlin');
+    $acts = file("activity.txt");
     $h = "<div class=\"drawer\">";
     $h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
     $h .= "<input type=\"checkbox\" id=\"drawer-handle\">";
     $h .= "<div class=\"link-list-container\">";
     foreach(array_filter($flat_link_list, 'flat_link_list_filter') as $link) {
+        $is_broken = '';
+        foreach($acts as $act) {
+            $annotations = explode(' ', $act);
+            if ($annotations[2] == $link) {
+                if ($annotations[3] == 'broken') {
+                  $is_broken = 'checked';
+                }
+            }
+        }
         $h .= "<div><a href=\"./" . $link . "\">" . $link . "</a>";
-        $h .= "<i class=\"link-time\" title=\"" . date("D. F jS, Y - h:ia", filemtime($link)) . "\">" . unix2ago(filemtime($link)) . "</i>";
+        $h .= "<i class=\"link-time\" title=\"" . date("D. F jS, Y - h:ia", filemtime($link)) . "\">" . filemtimeago($link) . "</i>";
         $h .= "<form class=\"link-annotation-form\">";
         $h .= "<input type=\"text\" name=\"link\" value=\"" . $link . "\" style=\"display:none\">";
-        $h .= "<label>Mark as Broken<input type=\"checkbox\" name=\"broken\" onclick=\"this.form.submit()\"></label>";
+        $h .= "<label>Mark as Broken<input type=\"checkbox\" name=\"broken\" onclick=\"this.form.submit()\"" . $is_broken . "></label>";
         $h .= "<label>Comment<input type=\"text\" name=\"comment\"></label>";
         $h .= "<input type=\"submit\">";
         $h .= "</form>";
