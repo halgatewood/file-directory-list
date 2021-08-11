@@ -1,11 +1,5 @@
 # Todo
 
-- HTTP basic auth
-  - Users:
-    - admin
-    - tester
-    - guest
-
 - Show date next to links in link list
 
 - Create activity.php
