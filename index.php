@@ -35,7 +35,7 @@ $sort_by = "date_desc"; // options: name_asc, name_desc, date_asc, date_desc
 $title = "<h1>Zaubar Web Tour QA</h1><h3>Pick your version</h3><p>sort_by = " . $sort_by . "</p>";
 
 // PASSWORD
-$use_password = false;
+$use_password = true;
 $mode_register = false;
 $mode_digest = false;
 
