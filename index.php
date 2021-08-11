@@ -83,20 +83,20 @@ if ($use_password) {
 
 //
 if ($track_activity) {
-  $user = 'anonym';
-  if ($use_password) {
-    $user = $_SERVER['PHP_AUTH_USER'];
-  }
-  $txt = $user . ' ';
-  $txt .= date(DATE_ATOM, time()) . ' ';
+  date_default_timezone_set('Europe/Berlin');
+  $act = array('anonym', date(DATE_ATOM, time()), 'access', '.', '.');
+  if ($use_password) $act[0] = $_SERVER['PHP_AUTH_USER'];
   $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-  $act = array('access', 'nothing', 'nothing');
   if (parse_url($url, PHP_URL_QUERY)) {
-    parse_str(parse_url($url, PHP_URL_QUERY), $act);
-    if ($act['broken'] == 'on') $act['broken'] = 'broken';
+    $form_params = array();
+    parse_str(parse_url($url, PHP_URL_QUERY), $form_params);
+    $act[2] = 'annotate';
+    $act[3] = $form_params['link'];
+    $act[4] = $form_params['broken'] == 'on' ? 'broken' : 'ok';
+    $act[5] = $form_params['comment'];
   }
-  $txt .= implode(' ', $act);
-  file_put_contents('activity.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
+  $txt = implode(' ', $act);
+  file_put_contents('activity.txt', $txt.PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 
 
@@ -323,9 +323,14 @@ function filemtimeago($file) {
     return round($sec) . ' seconds ago';
 }
 
+function parse_activity($str) {
+  $act = explode(' ', $str);
+  return array('user' => $act[0], 'date' => $act[1], 'type' => $act[2], 'link' => $act[3], 'broken' => $act[4], 'comment' => $act[5]);
+}
+
 // Display sidebar with all index.html files
 function display_flat_link_list() {
-    global $flat_link_list, $acts;
+    global $flat_link_list;
     date_default_timezone_set('Europe/Berlin');
     $h = "<div class=\"drawer\">";
     $h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
@@ -334,12 +339,10 @@ function display_flat_link_list() {
     foreach(array_filter($flat_link_list, 'flat_link_list_filter') as $link) {
         $is_broken = '';
         $comment = '';
-        foreach(array_reverse($acts) as $act) {
-            $a = explode(' ', $act);
-            if ($a[2] == $link) {
-                if ($a[3] == 'broken') $is_broken = 'checked';
-                $offset = strlen($a[0]) + strlen($a[1]) + strlen($a[2]) + strlen($a[3]) + 4;
-                $comment = substr($act, $offset);
+        foreach(array_reverse(file("activity.txt")) as $act) {
+            if (parse_activity($act)['link'] == $link) {
+                if (parse_activity($act)['broken'] == 'broken') $is_broken = 'checked';
+                $comment = parse_activity($act)['comment'];
                 break;
             }
         }
