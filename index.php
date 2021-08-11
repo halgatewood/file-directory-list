@@ -34,6 +34,11 @@ $sort_by = "date_desc"; // options: name_asc, name_desc, date_asc, date_desc
 // TITLE OF PAGE
 $title = "<h1>Zaubar Web Tour QA</h1><h3>Pick your version</h3><p>sort_by = " . $sort_by . "</p>";
 
+// PASSWORD
+$AUTH_ENABLED = true;
+$AUTH_USER = 'admin';
+$AUTH_PASS = 'admin';
+
 // STYLING (light or dark)
 $color	= "light";
 
@@ -63,7 +68,12 @@ $index_ext_list = array("html");
 	
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
+
+if ($AUTH_ENABLED) { require_auth(); }
+
 ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -433,6 +443,22 @@ function build_blocks( $items, $folder )
 
 	}
 
+}
+
+//
+function require_auth() {
+	header('Cache-Control: no-cache, must-revalidate, max-age=0');
+	$has_supplied_credentials = !(empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW']));
+	$is_not_authenticated = (
+		!$has_supplied_credentials ||
+		$_SERVER['PHP_AUTH_USER'] != $AUTH_USER ||
+		$_SERVER['PHP_AUTH_PW']   != $AUTH_PASS
+	);
+	if ($is_not_authenticated) {
+		header('HTTP/1.1 401 Authorization Required');
+		header('WWW-Authenticate: Basic realm="Access denied"');
+		exit;
+	}
 }
 
 
