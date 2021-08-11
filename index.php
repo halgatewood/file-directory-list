@@ -338,7 +338,8 @@ function display_flat_link_list() {
             $a = explode(' ', $act);
             if ($a[2] == $link) {
                 if ($a[3] == 'broken') $is_broken = 'checked';
-                if (!empty($a[4])) $comment = $a[4];
+                $offset = strlen($a[0]) + strlen($a[1]) + strlen($a[2]);
+                $comment = substr($act, $offset);
                 break;
             }
         }
