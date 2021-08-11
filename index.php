@@ -42,6 +42,7 @@ $USERS = array('admin' => 'marius', 'tester' => 'laetitia');
 
 // ACTIVITY
 $track_activity = true;
+$acts = file("activity.txt");
 
 // STYLING (light or dark)
 $color  = "light";
@@ -89,12 +90,12 @@ if ($track_activity) {
   $txt = $user . ' ';
   $txt .= date(DATE_ATOM, time()) . ' ';
   $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-  $link_annotations = array('none', 'off', 'nocomment');
+  $act = array('access', 'nothing', 'nothing');
   if (parse_url($url, PHP_URL_QUERY)) {
-    parse_str(parse_url($url, PHP_URL_QUERY), $link_annotations);
-    if ($link_annotations['broken'] == 'on') $link_annotations['broken'] = 'broken';
+    parse_str(parse_url($url, PHP_URL_QUERY), $act);
+    if ($act['broken'] == 'on') $act['broken'] = 'broken';
   }
-  $txt .= implode(' ', $link_annotations);
+  $txt .= implode(' ', $act);
   file_put_contents('activity.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
 }
 
@@ -324,9 +325,8 @@ function filemtimeago($file) {
 
 // Display sidebar with all index.html files
 function display_flat_link_list() {
-    global $flat_link_list;
+    global $flat_link_list, $acts;
     date_default_timezone_set('Europe/Berlin');
-    $acts = file("activity.txt");
     $h = "<div class=\"drawer\">";
     $h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
     $h .= "<input type=\"checkbox\" id=\"drawer-handle\">";
@@ -338,7 +338,7 @@ function display_flat_link_list() {
             $a = explode(' ', $act);
             if ($a[2] == $link) {
                 if ($a[3] == 'broken') $is_broken = 'checked';
-                $offset = strlen($a[0]) + strlen($a[1]) + strlen($a[2]);
+                $offset = strlen($a[0]) + strlen($a[1]) + strlen($a[2]) + strlen($a[3]) + 4;
                 $comment = substr($act, $offset);
                 break;
             }
@@ -546,10 +546,9 @@ function register() {
 //
 function login() {
     global $USERS;
-    $reg = file('users.txt');
-    for ($i = 0; $i < count($reg); ++$i) {
-        $user = explode(' ', $reg[$i])[0];
-        $pw = explode(' ', $reg[$i])[1];
+    foreach(file('users.txt') as $u) {
+        $user = explode(' ', $u)[0];
+        $pw = explode(' ', $u)[1];
         $USERS[$user] = $pw;
     }
     if (!isset($_SERVER['PHP_AUTH_USER'])) {
