@@ -305,6 +305,7 @@ function get_directory_size($path)
 }
 
 function unix2ago($t) {
+    date_default_timezone_set('Europe/Berlin');
     $sec = (time() - t) / 1000;
     if ($sec > 60*60*12) return round($sec / (60*60*24), 1) . ' days ago';
     if ($sec > 60*60) return round($sec / (60*60)) . ' hours ago';
@@ -315,6 +316,7 @@ function unix2ago($t) {
 // Display sidebar with all index.html files
 function display_flat_link_list() {
     global $flat_link_list;
+    date_default_timezone_set('Europe/Berlin');
     $h = "<div class=\"drawer\">";
     $h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
     $h .= "<input type=\"checkbox\" id=\"drawer-handle\">";
