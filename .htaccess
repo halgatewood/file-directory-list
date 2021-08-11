@@ -1,0 +1,14 @@
+<Files .htaccess>
+Order allow,deny
+Deny from all
+</Files>
+
+<Files users.txt>
+Order allow,deny
+Deny from all
+</Files>
+
+<IfModule mod_rewrite.c>
+   RewriteEngine on
+   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
