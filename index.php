@@ -478,7 +478,7 @@ build_blocks( $items, false );
 	$(document).ready(function() 
 	{
 
-		alert("" + <?php echo $AUTH_INPUT ?>);
+		alert("" + <?php echo $AUTH_INPUT; ?>);
 
 	});
 <?php } catch (\Throwable $t) { echo $t->getMessage(), " at ", $t->getFile(), ":", $t->getLine(), "\n"; } ?>
