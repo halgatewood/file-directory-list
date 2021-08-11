@@ -35,7 +35,8 @@ $sort_by = "date_desc"; // options: name_asc, name_desc, date_asc, date_desc
 $title = "<h1>Zaubar Web Tour QA</h1><h3>Pick your version</h3><p>sort_by = " . $sort_by . "</p>";
 
 // PASSWORD
-$AUTH_ENABLED = true;
+$use_password = true;
+$mode_register = false;
 
 // STYLING (light or dark)
 $color	= "light";
@@ -66,8 +67,6 @@ $index_ext_list = array("html");
 	
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
-
-if ($AUTH_ENABLED) { login(); }
 
 ?>
 
@@ -444,23 +443,57 @@ function build_blocks( $items, $folder )
 }
 
 //
-function login() {
+function register() {
+  $USERS = array('admin' => '140194');
 	header('Cache-Control: no-cache, must-revalidate, max-age=0');
-	$has_supplied_credentials = !(empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW']));
+	$has_supplied_credentials = strlen($_SERVER['PHP_AUTH_USER']) > 3;
 	if ($has_supplied_credentials) {
-		$txt = $_SERVER['PHP_AUTH_USER'] + "." + $_SERVER['PHP_AUTH_PW'];
+		$USERS[$_SERVER['PHP_AUTH_USER']] = $_SERVER['PHP_AUTH_PW'];
+		$txt = $_SERVER['PHP_AUTH_USER'] . ' ' . $_SERVER['PHP_AUTH_PW'];
 		file_put_contents('users.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
-		$is_not_authenticated = false;
-		if ($is_not_authenticated) {
-			header('HTTP/1.1 401 Authorization Required');
-			header('WWW-Authenticate: Basic realm="Access denied"');
-			exit;
-		}
+		echo 'registered';
+		exit;
+	} else {
+		header('HTTP/1.1 401 Authorization Required');
+		header('WWW-Authenticate: Basic realm="Access denied"');
+		exit;
 	}
+}
+
+//
+function login() {
+  $USERS = array('admin' => '140194', 'tester' => 'zaubar');
+	if (!isset($_SERVER['PHP_AUTH_USER'])) {
+		header('HTTP/1.1 401 Authorization Required');
+		header('WWW-Authenticate: Basic realm="Access denied"');
+		exit;
+	} else {
+    if (isset($USERS[$_SERVER['PHP_AUTH_USER']])) {
+      $pw = $USERS[$_SERVER['PHP_AUTH_USER']];
+      if ($pw == $_SERVER['PHP_AUTH_PW']) {
+        date_default_timezone_set('Europe/Berlin');
+        $txt = Date('Y-m-d\TH:i',time()) . ' ' . $USERS[$_SERVER['PHP_AUTH_USER']];
+        file_put_contents('logins.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
+      } else {
+        header('HTTP/1.1 401 Authorization Required');
+        header('WWW-Authenticate: Basic realm="Access denied"');
+        exit;
+      }
+    } else {
+      header('HTTP/1.1 401 Authorization Required');
+      header('WWW-Authenticate: Basic realm="Access denied"');
+      exit;
+    }
+  }
 }
 
 
 try {
+
+  if ($use_password) {
+    if ($mode_register) register();
+    else login();
+  }
 
 	// GET THE BLOCKS STARTED, FALSE TO INDICATE MAIN FOLDER
 	$items = scandir( dirname(__FILE__) );
