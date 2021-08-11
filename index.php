@@ -327,7 +327,7 @@ function display_flat_link_list() {
         $h .= "<i class=\"link-time\" title=\"" . date("D. F jS, Y - h:ia", filemtime($link)) . "\">" . unix2ago(filemtime($link)) . "</i>";
         $h .= "<form class=\"link-annotation-form\">";
         $h .= "<input type=\"text\" name=\"link\" value=\"" . $link . "\" style=\"display:none\">";
-        $h .= "<label>Mark as Broken<input type=\"checkbox\" name=\"broken\"></label>";
+        $h .= "<label>Mark as Broken<input type=\"checkbox\" name=\"broken\" onclick="this.form.submit()"></label>";
         $h .= "<label>Comment<input type=\"text\" name=\"comment\"></label>";
         $h .= "<input type=\"submit\">";
         $h .= "</form>";
