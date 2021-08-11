@@ -42,7 +42,7 @@ $mode_register = false;
 $color  = "light";
 
 // ADD SPECIFIC FILES YOU WANT TO IGNORE HERE
-$ignore_file_list = array( ".htaccess", "Thumbs.db", ".DS_Store" );
+$ignore_file_list = array( ".htaccess", "Thumbs.db", ".DS_Store", "users.txt" );
 
 // ADD SPECIFIC FILE EXTENSIONS YOU WANT TO IGNORE HERE, EXAMPLE: array('psd','jpg','jpeg')
 $ignore_ext_list = array( );
@@ -452,7 +452,7 @@ function build_blocks( $items, $folder )
 
 //
 function register() {
-  $USERS = array('admin' => '140194');
+    $USERS = array('admin' => '140194');
     header('Cache-Control: no-cache, must-revalidate, max-age=0');
     $has_supplied_credentials = strlen($_SERVER['PHP_AUTH_USER']) > 3;
     if ($has_supplied_credentials) {
@@ -470,29 +470,33 @@ function register() {
 
 //
 function login() {
-  $USERS = array('admin' => '140194', 'tester' => 'zaubar');
+    $USERS = array('admin' => 'marius', 'tester' => 'laetitia');
+    $reg = file('users.txt');
+    for ($i = 0; $i < count($reg); ++$i) {
+        $user = explode(' ', $reg[$i])[0];
+        $pw = explode(' ', $reg[$i])[1];
+        $USERS[$user] = $pw;
+    }
     if (!isset($_SERVER['PHP_AUTH_USER'])) {
         header('HTTP/1.1 401 Authorization Required');
         header('WWW-Authenticate: Basic realm="Access denied"');
         exit;
     } else {
-    if (isset($USERS[$_SERVER['PHP_AUTH_USER']])) {
-        $pw = $USERS[$_SERVER['PHP_AUTH_USER']];
-        if ($pw == $_SERVER['PHP_AUTH_PW']) {
-            date_default_timezone_set('Europe/Berlin');
-            $txt = Date('Y-m-d\TH:i',time()) . ' ' . $USERS[$_SERVER['PHP_AUTH_USER']];
-            file_put_contents('logins.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
+        if (isset($USERS[$_SERVER['PHP_AUTH_USER']])) {
+            $pw = $USERS[$_SERVER['PHP_AUTH_USER']];
+            if ($pw == $_SERVER['PHP_AUTH_PW']) {
+                date_default_timezone_set('Europe/Berlin');
+                $txt = Date('Y-m-d\TH:i',time()) . ' ' . $USERS[$_SERVER['PHP_AUTH_USER']];
+                file_put_contents('logins.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
+            } else {
+                echo 'Check your pw ' . $_SERVER['PHP_AUTH_PW'] . ' ' . $pw;
+                exit;
+            }
         } else {
-            header('HTTP/1.1 401 Authorization Required');
-            header('WWW-Authenticate: Basic realm="Access denied"');
+            echo 'User not found ' . $_SERVER['PHP_AUTH_USER'];
             exit;
         }
-    } else {
-        header('HTTP/1.1 401 Authorization Required');
-        header('WWW-Authenticate: Basic realm="Access denied"');
-        exit;
     }
-  }
 }
 
 
