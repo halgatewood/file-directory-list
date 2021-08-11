@@ -473,7 +473,7 @@ build_blocks( $items, false );
 
 ?>
 
-<?php if($AUTH_ENABLED) { ?>
+<?php try { if($AUTH_ENABLED) { ?>
 <script type="text/javascript">
 	$(document).ready(function() 
 	{
@@ -481,7 +481,7 @@ build_blocks( $items, false );
 		alert("" + <?php echo $AUTH_INPUT ?>);
 
 	});
-<?php } ?>
+<?php } catch (\Throwable $t) { echo $t->getMessage(), " at ", $t->getFile(), ":", $t->getLine(), "\n"; } ?>
 
 <?php if($toggle_sub_folders) { ?>
 <script type="text/javascript">
