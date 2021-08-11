@@ -495,10 +495,14 @@ function login() {
                 $txt = Date('Y-m-d\TH:i',time()) . ' ' . $USERS[$_SERVER['PHP_AUTH_USER']];
                 file_put_contents('logins.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
             } else {
+                header('HTTP/1.1 401 Authorization Required');
+                header('WWW-Authenticate: Basic realm="Access denied"');
                 echo 'Check your pw ' . $_SERVER['PHP_AUTH_PW'] . ' ' . $pw;
                 exit;
             }
         } else {
+            header('HTTP/1.1 401 Authorization Required');
+            header('WWW-Authenticate: Basic realm="Access denied"');
             echo 'User not found ' . $_SERVER['PHP_AUTH_USER'];
             exit;
         }
