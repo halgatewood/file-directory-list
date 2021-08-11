@@ -38,7 +38,10 @@ $title = "<h1>Zaubar Web Tour QA</h1><h3>Pick your version</h3><p>sort_by = " . 
 $use_password = true;
 $mode_register = false;
 $mode_digest = false;
+$USERS = array('admin' => 'marius', 'tester' => 'laetitia');
 
+// ACTIVITY
+$track_activity = true;
 
 // STYLING (light or dark)
 $color  = "light";
@@ -73,6 +76,23 @@ if ($use_password) {
     if ($mode_digest) loginDigest();
     else if ($mode_register) register();
     else login();
+}
+
+
+//
+if ($track_activity) {
+  $user = 'anonym';
+  if ($use_password) {
+    $user = $_SERVER['PHP_AUTH_USER'];
+  }
+  $txt = $user . ' ';
+  $txt .= date(DATE_ATOM, time()) . ' ';
+  $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+  $link_annotations = array();
+  parse_str(parse_url($url, PHP_URL_QUERY), $link_annotations);
+  if ($link_annotations['broken'] == 'on') $link_annotations['broken'] = 'broken';
+  $txt .= implode(' ', $link_annotations);
+  file_put_contents('activity.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
 }
 
 
@@ -151,7 +171,6 @@ $icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEwA
             bottom: 0;
             width: 100%;
             background: white;
-            transition: all .2s;
         }
 
         .drawer-handle {
@@ -173,21 +192,33 @@ $icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEwA
           display: none;
         }
 
-        .drawer-handle ~ input:checked ~ .index-links {
+        .drawer-handle ~ input:checked ~ .link-list-container {
             height: 2rem;
         }
 
-        .index-links {
+        .link-list-container {
             min-height: 2rem;
             max-height: 90vh;
             width: 100%;
             padding: 2rem;
             overflow: auto;
             background: white;
+            transition: all .2s;
         }
 
-        .index-links > div {
+        .link-list-container > div {
             padding: .2rem;
+        }
+
+        .link-list-container > div > .link-time {
+            padding-left: 1rem;
+        }
+
+        .link-list-container > div > .link-annotation-form {
+            display: inline-block;
+        }
+        .link-list-container > div > .link-annotation-form > * {
+            padding-left: 1rem;
         }
         
         .bold { font-weight: 900; }
@@ -273,15 +304,31 @@ function get_directory_size($path)
     return display_size($bytestotal);
 }
 
+function unix2ago($t) {
+    $sec = (time() - t) / 1000;
+    if ($sec > 60*60*12) return round($sec / (60*60*24), 1) . ' days ago';
+    if ($sec > 60*60) return round($sec / (60*60)) . ' hours ago';
+    if ($sec > 60) return round($sec / 60) . ' minutes ago';
+    return round($sec) . ' seconds ago';
+}
+
 // Display sidebar with all index.html files
 function display_flat_link_list() {
     global $flat_link_list;
     $h = "<div class=\"drawer\">";
     $h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
     $h .= "<input type=\"checkbox\" id=\"drawer-handle\">";
-    $h .= "<div class=\"index-links\">";
+    $h .= "<div class=\"link-list-container\">";
     foreach($flat_link_list as $link) {
-        $h .= "<div><a href=\"./" . $link . "\">" . filemtime($link) . "</a></div>";
+        $h .= "<div><a href=\"./" . $link . "\">" . $link . "</a>";
+        $h .= "<i class=\"link-time\" title=\"" . date("D. F jS, Y - h:ia", filemtime($link)) . "\">" . unix2ago(filemtime($link)) . "</i>";
+        $h .= "<form class=\"link-annotation-form\">";
+        $h .= "<input type=\"text\" name=\"link\" value=\"" . $link . "\" style=\"display:none\">";
+        $h .= "<label>Mark as Broken<input type=\"checkbox\" name=\"broken\"></label>";
+        $h .= "<label>Comment<input type=\"text\" name=\"comment\"></label>";
+        $h .= "<input type=\"submit\">";
+        $h .= "</form>";
+        $h .= "</div>";
     }
     $h .= "</div>";
     $h .= "</div>";
@@ -457,7 +504,7 @@ function build_blocks( $items, $folder )
 
 //
 function register() {
-    $USERS = array('admin' => '140194');
+    global $USERS;
     header('Cache-Control: no-cache, must-revalidate, max-age=0');
     $has_supplied_credentials = strlen($_SERVER['PHP_AUTH_USER']) > 3;
     if ($has_supplied_credentials) {
@@ -475,7 +522,7 @@ function register() {
 
 //
 function login() {
-    $USERS = array('admin' => 'marius', 'tester' => 'laetitia');
+    global $USERS;
     $reg = file('users.txt');
     for ($i = 0; $i < count($reg); ++$i) {
         $user = explode(' ', $reg[$i])[0];
