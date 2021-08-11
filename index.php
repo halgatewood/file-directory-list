@@ -280,8 +280,8 @@ function display_flat_link_list() {
     $h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
     $h .= "<input type=\"checkbox\" id=\"drawer-handle\">";
     $h .= "<div class=\"index-links\">";
-    foreach($flat_link_list as $index_file) {
-        $h .= "<div><a href=\"./" . $index_file . "\">" . $index_file . "</a></div>";
+    foreach($flat_link_list as $link) {
+        $h .= "<div><a href=\"./" . $link . "\">" . filemtime($link) . "</a></div>";
     }
     $h .= "</div>";
     $h .= "</div>";
