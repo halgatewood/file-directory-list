@@ -39,6 +39,7 @@ $use_password = false;
 $mode_register = false;
 $mode_digest = false;
 
+
 // STYLING (light or dark)
 $color  = "light";
 
@@ -68,6 +69,8 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 
 //
 if ($use_password) {
+    // Rely on apache htaccess RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
     if ($mode_digest) loginDigest();
     else if ($mode_register) register();
     else login();
@@ -535,7 +538,7 @@ function loginDigest() {
 
     // ok, valid username & password
     echo 'You are logged in as: ' . $data['username'];
-    
+
 }
 
 // function to parse the http auth header
