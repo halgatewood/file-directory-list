@@ -327,12 +327,12 @@ function display_flat_link_list() {
     $h .= "<div class=\"link-list-container\">";
     foreach(array_filter($flat_link_list, 'flat_link_list_filter') as $link) {
         $is_broken = '';
+        $comment = '';
         foreach($acts as $act) {
-            $annotations = explode(' ', $act);
-            if ($annotations[2] == $link) {
-                if ($annotations[3] == 'broken') {
-                  $is_broken = 'checked';
-                }
+            $a = explode(' ', $act);
+            if ($a[2] == $link) {
+                if ($a[3] == 'broken') $is_broken = 'checked';
+                if (!empty($a[4])) $comment = $a[4];
             }
         }
         $h .= "<div><a href=\"./" . $link . "\">" . $link . "</a>";
@@ -340,7 +340,7 @@ function display_flat_link_list() {
         $h .= "<form class=\"link-annotation-form\">";
         $h .= "<input type=\"text\" name=\"link\" value=\"" . $link . "\" style=\"display:none\">";
         $h .= "<label>Mark as Broken<input type=\"checkbox\" name=\"broken\" onclick=\"this.form.submit()\"" . $is_broken . "></label>";
-        $h .= "<label>Comment<input type=\"text\" name=\"comment\"></label>";
+        $h .= "<label>Comment<input type=\"text\" name=\"comment\" value=" . $comment . "></label>";
         $h .= "<input type=\"submit\">";
         $h .= "</form>";
         $h .= "</div>";
