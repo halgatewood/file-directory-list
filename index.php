@@ -220,8 +220,14 @@ $icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEwA
         .link-list-container > div > .link-annotation-form {
             display: inline-block;
         }
-        .link-list-container > div > .link-annotation-form > * {
+        .link-list-container > div > .link-annotation-form > label {
             padding-left: 1rem;
+            cursor: pointer;
+        }
+        .link-list-container > div > .link-annotation-form > input[type=submit] {
+          cursor: pointer;
+          border: none;
+          background: none;
         }
         
         .bold { font-weight: 900; }
@@ -340,8 +346,8 @@ function display_flat_link_list() {
         $h .= "<form class=\"link-annotation-form\">";
         $h .= "<input type=\"text\" name=\"link\" value=\"" . $link . "\" style=\"display:none\">";
         $h .= "<label>Mark as Broken<input type=\"checkbox\" name=\"broken\" onclick=\"this.form.submit()\"" . $is_broken . "></label>";
-        $h .= "<label>Comment<input type=\"text\" name=\"comment\" value=" . $comment . "></label>";
-        $h .= "<input type=\"submit\">";
+        $h .= "<label>Comment: <input type=\"text\" name=\"comment\" value=" . $comment . "></label>";
+        $h .= "<input type=\"submit\" value=\"save\">";
         $h .= "</form>";
         $h .= "</div>";
     }
