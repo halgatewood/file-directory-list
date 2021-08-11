@@ -3,3 +3,8 @@
 Order allow,deny
 Deny from all
 </Files>
+
+AuthUserFile ./.htpasswd
+AuthType Basic
+AuthName "My restricted Area"
+Require valid-user
