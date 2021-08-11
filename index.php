@@ -27,21 +27,21 @@ SOFTWARE.
 
 
 *** OPTIONS ***/
+	
+	// SORT BY
+	$sort_by = "date_desc"; // options: name_asc, name_desc, date_asc, date_desc
 
 	// TITLE OF PAGE
-	$title = "List of Files";
+	$title = "<h1>Zaubar Web Tour QA</h1><h3>Pick your version</h3><p>sort_by = " . $sort_by . "</p>";
 	
 	// STYLING (light or dark)
 	$color	= "light";
 	
 	// ADD SPECIFIC FILES YOU WANT TO IGNORE HERE
-	$ignore_file_list = array( ".htaccess", "Thumbs.db", ".DS_Store", "index.php" );
+	$ignore_file_list = array( ".htaccess", "Thumbs.db", ".DS_Store" );
 	
 	// ADD SPECIFIC FILE EXTENSIONS YOU WANT TO IGNORE HERE, EXAMPLE: array('psd','jpg','jpeg')
 	$ignore_ext_list = array( );
-	
-	// SORT BY
-	$sort_by = "date_desc"; // options: name_asc, name_desc, date_asc, date_desc
 	
 	// ICON URL
 	//$icon_url = "https://www.dropbox.com/s/lzxi5abx2gaj84q/flat.png?dl=0"; // DIRECT LINK
@@ -56,6 +56,10 @@ SOFTWARE.
 	// IGNORE EMPTY FOLDERS
 	$ignore_empty_folders = true;
 
+	// DISPLAY LINKS TO INDEX FILES ON FOLDERS
+	$index_files = array();
+	$index_ext_list = array("html");
+
 	
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
 if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
@@ -63,7 +67,7 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 <!DOCTYPE html>
 <html>
 <head>
-	<title><?php echo $title; ?></title>
+	<title>CMS QA</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0, viewport-fit=cover">
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
@@ -83,6 +87,88 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 		.block .data { line-height: 1.3em; color: #666; }
 		.block a { display: block; padding: 20px; transition: all 0.35s; }
 		.block a:hover, .block a.open { text-decoration: none; background: #efefef; }
+
+		.frame {
+			z-index: 2;
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			opacity: 0.8;
+			pointer-events: none;
+		} .frame .left {
+			left: 0;
+			top: 0;
+			position: fixed;
+			height: 100%;
+			width: 1rem;
+			background: DodgerBlue;
+		} .frame .right {
+			right: 0;
+			top: 0;
+			position: fixed;
+			height: 100%;
+			width: 1rem;
+			background: DodgerBlue;
+		} .frame .top {
+			top: 0;
+			left: 0;
+			position: fixed;
+			height: 1rem;
+			width: 100%;
+			background: DodgerBlue;
+		} .frame .bottom {
+			bottom: 0;
+			left: 0;
+			position: fixed;
+			height: 100%;
+			width: 1rem;
+			background: DodgerBlue;
+		}
+
+		.drawer {
+			z-index: 1;
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			background: white;
+		}
+
+		.drawer-handle {
+			text-align: center;
+			width: 100%; 
+			height: 2em; 
+			display: block;
+		}
+
+		.drawer-handle:hover {
+			text-align: center;
+			width: 100%; 
+			height: 2em; 
+			display: block;
+			background: rgba(0,0,0,.1);
+		}
+
+		.drawer-handle ~ input {
+		  display: none;
+		}
+
+		.drawer-handle ~ input:checked ~ .index-links {
+			height: 2rem;
+		}
+
+		.index-links {
+			min-height: 2rem;
+			max-height: 90vh;
+			width: 100%;
+			padding: 2rem;
+			overflow: auto;
+			background: white;
+		}
+
+		.index-links > div {
+			padding: .2rem;
+		}
 		
 		.bold { font-weight: 900; }
 		.upper { text-transform: uppercase; }
@@ -167,9 +253,33 @@ function get_directory_size($path)
     return display_size($bytestotal);
 }
 
+// Display sidebar with all index.html files
+function display_index_files() {
+	global $index_files;
+	$h = "<div class=\"drawer\">";
+	$h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
+	$h .= "<input type=\"checkbox\" id=\"drawer-handle\">";
+	$h .= "<div class=\"index-links\">";
+	foreach($index_files as $index_file) {
+		$h .= "<div><a href=\"./" . $index_file . "\">" . $index_file . "</a></div>";
+	}
+	$h .= "</div>";
+	$h .= "</div>";
+	return $h;
+}
+
+function display_frame() {
+	$h = "<div class=\"frame\">";
+	$h .= "<div class=\"left\"></div>";
+	$h .= "<div class=\"right\"></div>";
+	$h .= "<div class=\"top\"></div>";
+	$h .= "<div class=\"bottom\"></div>";
+	$h .= "</div>";
+	return $h;
+}
 
 // SHOW THE MEDIA BLOCK
-function display_block( $file )
+function display_block( $file, $index_files_array )
 {
 	global $ignore_file_list, $ignore_ext_list, $force_download;
 	
@@ -187,8 +297,9 @@ function display_block( $file )
 	
 	if ($file_ext === "dir") 
 	{
-		$rtn .= "		<div class=\"file fs-1-2 bold\">" . basename($file) . "</div>";
-		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">" . count_dir_files($file) . "</span> files</div>";
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . substr(basename($file), 0, 16) . "</div>";
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Date:</span> " . date("D. F jS, Y - h:ia", filemtime($file . '/.')) . "</div>";
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Version:</span> " . basename($file) . "</div>";
 		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . get_directory_size($file) . "</div>";
 		
 	}
@@ -209,7 +320,7 @@ function display_block( $file )
 // RECURSIVE FUNCTION TO BUILD THE BLOCKS
 function build_blocks( $items, $folder )
 {
-	global $ignore_file_list, $ignore_ext_list, $sort_by, $toggle_sub_folders, $ignore_empty_folders;
+	global $ignore_file_list, $ignore_ext_list, $sort_by, $toggle_sub_folders, $ignore_empty_folders, $index_files, $index_ext_list;
 	
 	$objects = array();
 	$objects['directories'] = array();
@@ -250,6 +361,12 @@ function build_blocks( $items, $folder )
 		{
 			$objects['files'][$file_time . "-" . $item] = $item;
 		}
+
+		// INDEX FILES
+		if(in_array($file_ext, $index_ext_list))
+		{
+			array_push($index_files, $item);
+		}
 	}
 
 	// Second loop
@@ -277,11 +394,11 @@ function build_blocks( $items, $folder )
 				break;	
 			}
 			
-			if( $has_sub_items ) echo display_block( $file );
+			if( $has_sub_items ) echo display_block( $file, $index_files );
 		}
 		else
 		{
-			echo display_block( $file );
+			echo display_block( $file, $index_files );
 		}
 		
 		if( $toggle_sub_folders )
@@ -306,13 +423,25 @@ function build_blocks( $items, $folder )
 		$fileExt = ext($file);
 		if(in_array($file, $ignore_file_list)) { continue; }
 		if(in_array($fileExt, $ignore_ext_list)) { continue; }
-		echo display_block( $file );
+		echo display_block( $file, $index_files );
 	}
+
+  // If in root folder, display window with list of index.html files 
+	if (!$folder) {
+
+		echo display_index_files();
+
+	}
+
 }
+
+
+
 
 // GET THE BLOCKS STARTED, FALSE TO INDICATE MAIN FOLDER
 $items = scandir( dirname(__FILE__) );
 build_blocks( $items, false );
+
 ?>
 
 <?php if($toggle_sub_folders) { ?>
@@ -322,13 +451,25 @@ build_blocks( $items, false );
 		$("a.dir").click(function(e)
 		{
 			$(this).toggleClass('open');
-		 	$('.sub[data-folder="' + $(this).attr('href') + '"]').slideToggle();
+			$('.sub[data-folder="' + $(this).attr('href') + '"]').slideToggle();
 			e.preventDefault();
 		});
+
 	});
 </script>
 <?php } ?>
 </div>
-<div style="padding: 10px 10px 40px 10px;"><a href="https://halgatewood.com/free/file-directory-list/">Free PHP File Directory Script</a> (<a href="https://github.com/halgatewood/file-directory-list/">GitHub</a>)</div>
+
+<?php 
+
+echo display_frame();
+
+?>
+
+<div style="padding: 10px 10px 40px 10px;">
+<a href="https://halgatewood.com/free/file-directory-list/">Free PHP File Directory Script</a> 
+(<a href="https://github.com/halgatewood/file-directory-list/">GitHub</a>)
+</div>
+
 </body>
 </html>
