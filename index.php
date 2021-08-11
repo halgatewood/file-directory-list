@@ -58,9 +58,8 @@ $force_download = true;
 // IGNORE EMPTY FOLDERS
 $ignore_empty_folders = true;
 
-// DISPLAY LINKS TO INDEX FILES ON FOLDERS
-$index_files = array();
-$index_ext_list = array("html");
+// DISPLAY LINKS TO HTML FILES IN A FLAT LIST
+$flat_link_list = array();
 
     
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
@@ -140,8 +139,8 @@ $icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEwA
             bottom: 0;
             left: 0;
             position: fixed;
-            height: 100%;
-            width: 1rem;
+            height: 1rem;
+            width: 100%;
             background: DodgerBlue;
         }
 
@@ -152,6 +151,7 @@ $icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEwA
             bottom: 0;
             width: 100%;
             background: white;
+            transition: all .2s;
         }
 
         .drawer-handle {
@@ -274,13 +274,13 @@ function get_directory_size($path)
 }
 
 // Display sidebar with all index.html files
-function display_index_files() {
-    global $index_files;
+function display_flat_link_list() {
+    global $flat_link_list;
     $h = "<div class=\"drawer\">";
     $h .= "<label class=\"drawer-handle\" for=\"drawer-handle\">---</label>";
     $h .= "<input type=\"checkbox\" id=\"drawer-handle\">";
     $h .= "<div class=\"index-links\">";
-    foreach($index_files as $index_file) {
+    foreach($flat_link_list as $index_file) {
         $h .= "<div><a href=\"./" . $index_file . "\">" . $index_file . "</a></div>";
     }
     $h .= "</div>";
@@ -299,7 +299,7 @@ function display_frame() {
 }
 
 // SHOW THE MEDIA BLOCK
-function display_block( $file, $index_files_array )
+function display_block( $file, $flat_link_list_array )
 {
     global $ignore_file_list, $ignore_ext_list, $force_download;
     
@@ -340,7 +340,7 @@ function display_block( $file, $index_files_array )
 // RECURSIVE FUNCTION TO BUILD THE BLOCKS
 function build_blocks( $items, $folder )
 {
-    global $ignore_file_list, $ignore_ext_list, $sort_by, $toggle_sub_folders, $ignore_empty_folders, $index_files, $index_ext_list;
+    global $ignore_file_list, $ignore_ext_list, $sort_by, $toggle_sub_folders, $ignore_empty_folders, $flat_link_list;
     
     $objects = array();
     $objects['directories'] = array();
@@ -383,9 +383,9 @@ function build_blocks( $items, $folder )
         }
 
         // INDEX FILES
-        if(in_array($file_ext, $index_ext_list))
+        if($file_ext == 'html')
         {
-            array_push($index_files, $item);
+            array_push($flat_link_list, $item);
         }
     }
 
@@ -414,11 +414,11 @@ function build_blocks( $items, $folder )
                 break;  
             }
             
-            if( $has_sub_items ) echo display_block( $file, $index_files );
+            if( $has_sub_items ) echo display_block( $file, $flat_link_list );
         }
         else
         {
-            echo display_block( $file, $index_files );
+            echo display_block( $file, $flat_link_list );
         }
         
         if( $toggle_sub_folders )
@@ -443,13 +443,13 @@ function build_blocks( $items, $folder )
         $fileExt = ext($file);
         if(in_array($file, $ignore_file_list)) { continue; }
         if(in_array($fileExt, $ignore_ext_list)) { continue; }
-        echo display_block( $file, $index_files );
+        echo display_block( $file, $flat_link_list );
     }
 
   // If in root folder, display window with list of index.html files 
     if (!$folder) {
 
-        echo display_index_files();
+        echo display_flat_link_list();
 
     }
 
