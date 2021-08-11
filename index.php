@@ -63,7 +63,7 @@ $ignore_empty_folders = true;
 
 // DISPLAY LINKS TO HTML FILES IN A FLAT LIST
 $flat_link_list = array();
-$flat_link_list_exclude = array('WTA')
+$flat_link_list_exclude = array('WTA');
 
     
 // SET TITLE BASED ON FOLDER NAME, IF NOT SET ABOVE
