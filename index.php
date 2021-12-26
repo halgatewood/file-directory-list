@@ -178,8 +178,7 @@ function display_block( $file )
 	if(in_array($file, $ignore_file_list)) return;
 	if(in_array($file_ext, $ignore_ext_list)) return;
 	
-	$download_att = ($force_download AND $file_ext != "dir" ) ? " download='" . basename($file) . "'" : "";
-	
+	$download_att = ($force_download AND $file_ext != "dir" ) ? " download=\"" . htmlEntities(basename($file), ENT_QUOTES) . "\"" : "";
 	$rtn = "<div class=\"block\">";
 	$rtn .= "<a href=\"$file\" class=\"$file_ext\"{$download_att}>";
 	$rtn .= "	<div class=\"img $file_ext\"></div>";
