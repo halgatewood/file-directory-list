@@ -187,13 +187,13 @@ function display_block( $file )
 	
 	if ($file_ext === "dir") 
 	{
-		$rtn .= "		<div class=\"file fs-1-2 bold\">" . basename($file) . "</div>";
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . htmlspecialchars(basename($file), ENT_QUOTES) . "</div>";
 		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">" . count_dir_files($file) . "</span> files</div>";
 		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . get_directory_size($file) . "</div>";
 	}
 	else
 	{
-		$rtn .= "		<div class=\"file fs-1-2 bold\">" . basename($file) . "</div>";
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . htmlspecialchars(basename($file), ENT_QUOTES) . "</div>";
 		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . display_size(filesize($file)) . "</div>";
 		$rtn .= "		<div class=\"data upper modified fs-0-7\"><span class=\"bold\">Last modified:</span> " .  date("D. F jS, Y - h:ia", filemtime($file)) . "</div>";	
 	}
