@@ -66,7 +66,6 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 	<title><?php echo $title; ?></title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0, viewport-fit=cover">
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 	<link href="//fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet" type="text/css" />
 	<style>
 		*, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -306,6 +305,7 @@ build_blocks( $items, false );
 ?>
 
 <?php if($toggle_sub_folders) { ?>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() 
 	{
