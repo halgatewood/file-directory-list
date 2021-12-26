@@ -181,27 +181,27 @@ function display_block( $file )
 	$download_att = ($force_download AND $file_ext != "dir" ) ? " download=\"" . htmlEntities(basename($file), ENT_QUOTES) . "\"" : "";
 	$file_url = htmlEntities(rawurlencode($file), ENT_QUOTES);
 
-	$rtn = "<div class=\"block\">";
-	$rtn .= "<a href=\"$file_url\" class=\"$file_ext\"{$download_att}>";
-	$rtn .= "	<div class=\"img $file_ext\"></div>";
-	$rtn .= "	<div class=\"name\">";
+	$rtn = "<div class=\"block\">".PHP_EOL;
+	$rtn .= "<a href=\"$file_url\" class=\"$file_ext\"{$download_att}>".PHP_EOL;
+	$rtn .= "	<div class=\"img $file_ext\"></div>".PHP_EOL;
+	$rtn .= "	<div class=\"name\">".PHP_EOL;
 	
 	if ($file_ext === "dir") 
 	{
-		$rtn .= "		<div class=\"file fs-1-2 bold\">" . htmlspecialchars(basename($file), ENT_QUOTES) . "</div>";
-		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">" . count_dir_files($file) . "</span> files</div>";
-		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . get_directory_size($file) . "</div>";
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . htmlspecialchars(basename($file), ENT_QUOTES) . "</div>".PHP_EOL;
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">" . count_dir_files($file) . "</span> files</div>".PHP_EOL;
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . get_directory_size($file) . "</div>".PHP_EOL;
 	}
 	else
 	{
-		$rtn .= "		<div class=\"file fs-1-2 bold\">" . htmlspecialchars(basename($file), ENT_QUOTES) . "</div>";
-		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . display_size(filesize($file)) . "</div>";
-		$rtn .= "		<div class=\"data upper modified fs-0-7\"><span class=\"bold\">Last modified:</span> " .  date("D. F jS, Y - h:ia", filemtime($file)) . "</div>";	
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . htmlspecialchars(basename($file), ENT_QUOTES) . "</div>".PHP_EOL;
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . display_size(filesize($file)) . "</div>".PHP_EOL;
+		$rtn .= "		<div class=\"data upper modified fs-0-7\"><span class=\"bold\">Last modified:</span> " .  date("D. F jS, Y - h:ia", filemtime($file)) . "</div>".PHP_EOL;	
 	}
 
-	$rtn .= "	</div>";
-	$rtn .= "	</a>";
-	$rtn .= "</div>";
+	$rtn .= "	</div>".PHP_EOL;
+	$rtn .= "	</a>".PHP_EOL;
+	$rtn .= "</div>".PHP_EOL;
 	return $rtn;
 }
 
