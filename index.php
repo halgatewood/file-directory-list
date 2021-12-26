@@ -139,10 +139,10 @@ function ext($filename)
 function display_size($bytes, $precision = 2) 
 {
 	$units = array('B', 'KB', 'MB', 'GB', 'TB');
-    $bytes = max($bytes, 0); 
-    $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
-    $pow = min($pow, count($units) - 1); 
-    $bytes /= (1 << (10 * $pow)); 
+	$bytes = max($bytes, 0); 
+	$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+	$pow = min($pow, count($units) - 1); 
+	$bytes /= (1 << (10 * $pow)); 
 	return round($bytes, $precision) . '<span class="fs-0-8 bold">' . $units[$pow] . "</span>";
 }
 
@@ -154,17 +154,17 @@ function count_dir_files( $dir)
 
 function get_directory_size($path)
 {
-    $bytestotal = 0;
-    $path = realpath($path);
-    if($path!==false && $path!='' && file_exists($path))
-    {
-        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object)
-        {
-            $bytestotal += $object->getSize();
-        }
-    }
-    
-    return display_size($bytestotal);
+	$bytestotal = 0;
+	$path = realpath($path);
+	if($path!==false && $path!='' && file_exists($path))
+	{
+		foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object)
+		{
+			$bytestotal += $object->getSize();
+		}
+	}
+	
+	return display_size($bytestotal);
 }
 
 
@@ -190,7 +190,6 @@ function display_block( $file )
 		$rtn .= "		<div class=\"file fs-1-2 bold\">" . basename($file) . "</div>";
 		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">" . count_dir_files($file) . "</span> files</div>";
 		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . get_directory_size($file) . "</div>";
-		
 	}
 	else
 	{
