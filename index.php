@@ -277,7 +277,8 @@ function build_blocks( $items, $folder )
 		{
 			if( $sub_items )
 			{
-				echo "<div class='sub' data-folder=\"$file\">";
+				$file_url = htmlEntities(rawurlencode($file), ENT_QUOTES);
+				echo "<div class='sub' data-folder=\"$file_url\">";
 				build_blocks( $sub_items, $file );
 				echo "</div>";
 			}
