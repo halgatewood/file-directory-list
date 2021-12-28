@@ -242,10 +242,7 @@ function build_blocks( $items, $folder )
 		$file_time = date("U", filemtime($item));
 		
 		// FILES
-		if( $item )
-		{
-			$objects['files'][$file_time . "-" . $item] = $item;
-		}
+		$objects['files'][$file_time . "-" . $item] = $item;
 	}
 	
 	foreach($objects['directories'] as $c => $file)
