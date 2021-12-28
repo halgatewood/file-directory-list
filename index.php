@@ -221,7 +221,7 @@ function build_blocks( $items, $folder )
 		// IGNORE FILE
 		if(in_array($item, $ignore_file_list)) { continue; }
 	
-		if( $folder && $item )
+		if( $folder !== false )
 		{
 			$item = "$folder/$item";
 		}
