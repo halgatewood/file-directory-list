@@ -50,3 +50,8 @@ This will add the html download attribute which forces the download in some brow
 `$ignore_empty_folders = true;`
 
 Ability to hide empty folders.
+
+--
+`$hashed_password = '';`
+
+If filled with the hash of your password enables page protection with a login.
