@@ -1,6 +1,6 @@
 # Free Super Clean PHP File Directory Listing Script
 
-Easily display files and folders in a mobile friendly, clean and cool way. Just drop the `index.php` in your folder and you are ready to go. Past versions of this script can be found here: https://halgatewood.com/free/file-directory-list/
+Easily display files and folders in a mobile friendly, clean and cool way. Just drop the `index.php` in your folder and you are ready to go. Past versions of this script can be found here: https://halgatewood.com/file-directory-list/
 
 ## Options 
 
@@ -34,7 +34,7 @@ This will sort the files, the available options are: name_asc, name_desc, date_a
 --
 `$icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEw....";`
 
-A data sprite of evenly spaced out icons. You can create your own like the one found here: https://www.dropbox.com/s/lzxi5abx2gaj84q/flat.png?dl=0
+A data sprite of evenly spaced out icons. You can create your own like the one found here: https://halgatewood.com/images/icons.png
 
 --
 `$toggle_sub_folders = true;`
