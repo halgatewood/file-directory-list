@@ -35,9 +35,11 @@ This will sort the files, the available options are: name_asc, name_desc, date_a
 `$icon_url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAAyCAYAAADP7vEw....";`
 
 A data sprite of evenly spaced out icons. You can create your own like the one found here.
+
 Original: 
 - https://halgatewood.com/images/icons.png
 - https://halgatewood.com/images/icons.psd
+- 
 Flat:
 - https://halgatewood.com/images/flat.png
 - https://halgatewood.com/images/flat.psd
