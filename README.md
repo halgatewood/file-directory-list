@@ -39,7 +39,7 @@ A data sprite of evenly spaced out icons. You can create your own like the one f
 Original: 
 - https://halgatewood.com/images/icons.png
 - https://halgatewood.com/images/icons.psd
-- 
+
 Flat:
 - https://halgatewood.com/images/flat.png
 - https://halgatewood.com/images/flat.psd
