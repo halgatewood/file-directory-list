@@ -66,7 +66,6 @@ if( !$title ) { $title = clean_title(basename(dirname(__FILE__))); }
 	<title><?php echo $title; ?></title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0, viewport-fit=cover">
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 	<link href="//fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet" type="text/css" />
 	<style>
 		*, *:before, *:after { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -139,10 +138,10 @@ function ext($filename)
 function display_size($bytes, $precision = 2) 
 {
 	$units = array('B', 'KB', 'MB', 'GB', 'TB');
-    $bytes = max($bytes, 0); 
-    $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
-    $pow = min($pow, count($units) - 1); 
-    $bytes /= (1 << (10 * $pow)); 
+	$bytes = max($bytes, 0); 
+	$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+	$pow = min($pow, count($units) - 1); 
+	$bytes /= (1 << (10 * $pow)); 
 	return round($bytes, $precision) . '<span class="fs-0-8 bold">' . $units[$pow] . "</span>";
 }
 
@@ -154,17 +153,17 @@ function count_dir_files( $dir)
 
 function get_directory_size($path)
 {
-    $bytestotal = 0;
-    $path = realpath($path);
-    if($path!==false && $path!='' && file_exists($path))
-    {
-        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object)
-        {
-            $bytestotal += $object->getSize();
-        }
-    }
-    
-    return display_size($bytestotal);
+	$bytestotal = 0;
+	$path = realpath($path);
+	if($path!==false && $path!='' && file_exists($path))
+	{
+		foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS)) as $object)
+		{
+			$bytestotal += $object->getSize();
+		}
+	}
+	
+	return display_size($bytestotal);
 }
 
 
@@ -174,34 +173,34 @@ function display_block( $file )
 	global $ignore_file_list, $ignore_ext_list, $force_download;
 	
 	$file_ext = ext($file);
-	if( !$file_ext AND is_dir($file)) $file_ext = "dir";
+	if(is_dir($file)) $file_ext = "dir";
 	if(in_array($file, $ignore_file_list)) return;
 	if(in_array($file_ext, $ignore_ext_list)) return;
 	
-	$download_att = ($force_download AND $file_ext != "dir" ) ? " download='" . basename($file) . "'" : "";
-	
-	$rtn = "<div class=\"block\">";
-	$rtn .= "<a href=\"$file\" class=\"$file_ext\"{$download_att}>";
-	$rtn .= "	<div class=\"img $file_ext\"></div>";
-	$rtn .= "	<div class=\"name\">";
+	$download_att = ($force_download AND $file_ext != "dir" ) ? " download=\"" . htmlEntities(basename($file), ENT_QUOTES) . "\"" : "";
+	$file_url = htmlEntities(rawurlencode($file), ENT_QUOTES);
+
+	$rtn = "<div class=\"block\">".PHP_EOL;
+	$rtn .= "<a href=\"$file_url\" class=\"$file_ext\"{$download_att}>".PHP_EOL;
+	$rtn .= "	<div class=\"img $file_ext\"></div>".PHP_EOL;
+	$rtn .= "	<div class=\"name\">".PHP_EOL;
 	
 	if ($file_ext === "dir") 
 	{
-		$rtn .= "		<div class=\"file fs-1-2 bold\">" . basename($file) . "</div>";
-		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">" . count_dir_files($file) . "</span> files</div>";
-		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . get_directory_size($file) . "</div>";
-		
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . htmlspecialchars(basename($file), ENT_QUOTES) . "</div>".PHP_EOL;
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">" . count_dir_files($file) . "</span> files</div>".PHP_EOL;
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . get_directory_size($file) . "</div>".PHP_EOL;
 	}
 	else
 	{
-		$rtn .= "		<div class=\"file fs-1-2 bold\">" . basename($file) . "</div>";
-		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . display_size(filesize($file)) . "</div>";
-		$rtn .= "		<div class=\"data upper modified fs-0-7\"><span class=\"bold\">Last modified:</span> " .  date("D. F jS, Y - h:ia", filemtime($file)) . "</div>";	
+		$rtn .= "		<div class=\"file fs-1-2 bold\">" . htmlspecialchars(basename($file), ENT_QUOTES) . "</div>".PHP_EOL;
+		$rtn .= "		<div class=\"data upper size fs-0-7\"><span class=\"bold\">Size:</span> " . display_size(filesize($file)) . "</div>".PHP_EOL;
+		$rtn .= "		<div class=\"data upper modified fs-0-7\"><span class=\"bold\">Last modified:</span> " .  date("D. F jS, Y - h:ia", filemtime($file)) . "</div>".PHP_EOL;	
 	}
 
-	$rtn .= "	</div>";
-	$rtn .= "	</a>";
-	$rtn .= "</div>";
+	$rtn .= "	</div>".PHP_EOL;
+	$rtn .= "	</a>".PHP_EOL;
+	$rtn .= "</div>".PHP_EOL;
 	return $rtn;
 }
 
@@ -222,7 +221,7 @@ function build_blocks( $items, $folder )
 		// IGNORE FILE
 		if(in_array($item, $ignore_file_list)) { continue; }
 	
-		if( $folder && $item )
+		if( $folder !== false )
 		{
 			$item = "$folder/$item";
 		}
@@ -243,10 +242,7 @@ function build_blocks( $items, $folder )
 		$file_time = date("U", filemtime($item));
 		
 		// FILES
-		if( $item )
-		{
-			$objects['files'][$file_time . "-" . $item] = $item;
-		}
+		$objects['files'][$file_time . "-" . $item] = $item;
 	}
 	
 	foreach($objects['directories'] as $c => $file)
@@ -278,7 +274,8 @@ function build_blocks( $items, $folder )
 		{
 			if( $sub_items )
 			{
-				echo "<div class='sub' data-folder=\"$file\">";
+				$file_url = htmlEntities(rawurlencode($file), ENT_QUOTES);
+				echo "<div class='sub' data-folder=\"$file_url\">";
 				build_blocks( $sub_items, $file );
 				echo "</div>";
 			}
@@ -306,6 +303,7 @@ build_blocks( $items, false );
 ?>
 
 <?php if($toggle_sub_folders) { ?>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() 
 	{
